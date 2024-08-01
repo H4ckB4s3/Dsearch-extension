@@ -1,0 +1,31 @@
+body {
+    font-family: "Nitti Light", Helvetica, sans-serif;
+    width: 333px;
+    background-color: #f4f4f4;
+    color: #333;
+    border-radius: 7px;
+}
+.search-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.search-input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+.search-button {
+    padding: 8px 12px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.search-button:hover {
+    background-color: #0056b3;
+}
+
