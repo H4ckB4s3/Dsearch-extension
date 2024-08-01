@@ -27,84 +27,15 @@ To install the Dsearch Chrome Extension, follow these steps:
 ### HTML Structure
 The extension consists of a simple HTML structure with an input field and a button.
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dsearch Extension</title>
-    <link rel="stylesheet" href="popup.css">
-</head>
-<body>
-    <div class="search-container">
-        <input type="text" id="domain-input" class="search-input" placeholder="Enter ENS/HNS domain">
-        <button id="search-button" class="search-button">Go</button>
-    </div>
-    <script src="popup.js"></script>
-</body>
-</html>
 ## JavaScript Functionality
 The JavaScript code handles the domain resolution logic and UI interactions.
 
 ### Domain Resolution
 The script listens for the button click, processes the input, and constructs the appropriate URL based on the domain type.
 
-```javascript
-document.getElementById('search-button').addEventListener('click', function() {
-    let query = document.getElementById('domain-input').value.trim();
-
-    // Remove http://, https://, or leading dots from the input
-    query = query.replace(/^https?:\/\//, '').replace(/^\./, '');
-
-    // Replace spaces with dots
-    query = query.replace(/\s+/g, '.');
-
-    if (query) {
-        const parts = query.split('/');
-        let domain = parts.shift();
-        const path = parts.join('/');
-
-        // Check for .eth and append .limo
-        const ethPattern = /\.eth$/;
-        if (ethPattern.test(domain)) {
-            domain += '.limo';
-        } else {
-            domain += '.hns.to';
-        }
-
-        // Construct the URL
-        const url = path ? `http://${domain}/${path}` : `http://${domain}`;
-        window.open(url, '_blank');
-    }
-});
 ### Checking Bridge Availability
 The script checks if the `hns.to` and `limo.eth` bridges are online and updates the UI indicators accordingly.
 
-```javascript
-async function checkSite(url, indicatorId) {
-    try {
-        // Making a request to the URL
-        const response = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
-
-        // Check if response is successful
-        if (response.ok || response.type === 'opaque') {
-            document.getElementById(indicatorId).classList.add('green');
-            document.getElementById(indicatorId).classList.remove('red');
-        } else {
-            document.getElementById(indicatorId).classList.add('red');
-            document.getElementById(indicatorId).classList.remove('green');
-        }
-    } catch (error) {
-        document.getElementById(indicatorId).classList.add('red');
-        document.getElementById(indicatorId).classList.remove('green');
-    }
-}
-
-// Check both sites on page load
-window.onload = () => {
-    checkSite('https://hns.to', 'hns-indicator');
-    checkSite('https://eth.limo', 'limo-indicator');
-};
 ## License
 This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
 
