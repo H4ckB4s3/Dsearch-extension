@@ -19,14 +19,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to handle search
     function handleSearch() {
-        const query = domainInput.value.trim();
+        let query = domainInput.value.trim();
         if (query) {
-            let domain = query.replace(/^https?:\/\//, '').replace(/^\./, '').replace(/\s+/g, '.');
+            // Remove http://, https://, or leading dots from the input
+            query = query.replace(/^https?:\/\//, '').replace(/^\./, '');
+            
+            // Replace spaces with dots
+            query = query.replace(/\s+/g, '.');
+            
+            // Split the query into domain and path
+            const parts = query.split('/');
+            let domain = parts.shift();
+            const path = parts.join('/');
+
+            // Check for .eth and append .eth.limo or otherwise .hns.to
             const ethPattern = /\.eth$/;
-            domain += ethPattern.test(domain) ? '.limo' : '.hns.to';
-            const url = `http://${domain}`;
+            if (ethPattern.test(domain)) {
+                domain += '.limo';
+            } else {
+                domain += '.hns.to';
+            }
+
+            // Construct the URL
+            const url = path ? `http://${domain}/${path}` : `http://${domain}`;
             chrome.tabs.create({ url });
         }
     }
 });
-
